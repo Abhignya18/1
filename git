@@ -1,1 +1,3 @@
-
+git config --global user.name "Abhignya18"
+git congig --global user.email "abhignyadevarashetty@gmail.com"
+git clone 
