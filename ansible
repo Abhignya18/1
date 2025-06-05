@@ -1,1 +1,37 @@
+sudo apt update
+sudo apt intsall ansible 
+ansible --version
+mkdir ~/ansible
+cd ~/ansible
+touch hosts.ini
 
+[local]
+localhost ansible_connection=local
+touch local_playbook.yml
+
+---
+- name: Install Nginx on Local Machine
+  hosts: local
+  become: yes  # This will use sudo to run tasks with elevated privileges
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+EOF
+ansible-playbook -i hosts.ini local_playbook.yml
+systemctl status nginx
+echo "Hello World" | sudo tee /var/www/html/index.html
+sudo gedit /etc/nginx/sites-available/default
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+    server_name _;
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+sudo systemctl restart nginx
